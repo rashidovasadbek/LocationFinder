@@ -6,26 +6,26 @@ using Newtonsoft.Json;
 
 namespace LocationFinder.Service;
 
-public class LocationFinder
+public class LocationFinderService : ILocationFinderService
 {
     private readonly LocationFinderSettings _locationFinderSettings;
     public HttpClient HttpClient { get; init; }
 
-    public LocationFinder(IOptions<LocationFinderSettings> locationFinderSettings, IHttpClientFactory httpClientFactory)
+    public LocationFinderService(IOptions<LocationFinderSettings> locationFinderSettings, IHttpClientFactory httpClientFactory)
     {
         HttpClient = httpClientFactory.CreateClient();
-        _locationFinderSettings = locationFinderSettings.Value;
-        // Set base addresss
+        // Set base address
+        
         HttpClient.BaseAddress = new Uri(locationFinderSettings.Value.BaseAddressUrl);
+        _locationFinderSettings = locationFinderSettings.Value;
     }
-
-
+    
     public async ValueTask<GeoLocation> FindAsync(decimal latitude, decimal longitude)
     {
         // Create query paramters
         var queryParameters = HttpUtility.ParseQueryString(string.Empty);
         queryParameters["latitude"] = latitude.ToString();
-        queryParameters["longitude"] = longitude.ToString();
+        queryParameters["latitude"] = longitude.ToString();
 
         // Add query parameters to URL
         var url = $"{_locationFinderSettings.LocationsUrl}?{queryParameters}";
